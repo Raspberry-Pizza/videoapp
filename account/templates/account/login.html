@@ -15,7 +15,8 @@
     <div class="container">
     
 
-    <form>
+    <form method="post">
+      {% csrf_token %}
         <div class="form-group">
           <label for="exampleInputEmail1">Username</label>
           <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Username">
