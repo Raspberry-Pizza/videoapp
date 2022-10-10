@@ -9,5 +9,13 @@ class Dashboard(View):
 
     def get(self, request):
         users=User.objects.all()
-        print(users)
         return render(request, self.template_name, {'users': users})
+
+
+
+class Login(View):
+    template_name='account/login.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+

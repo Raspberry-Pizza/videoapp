@@ -19,5 +19,6 @@ from account.views import *
 from account import *
 
 urlpatterns = [
-    path('dashboard', Dashboard.as_view(), name='dashboard')
+    path('dashboard', Dashboard.as_view(), name='dashboard'),
+    path('login', Login.as_view(), name='login'),
 ]
