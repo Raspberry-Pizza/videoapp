@@ -1,14 +1,108 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta id="myname" data-item="{{request.user.username}}" >
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
     {% for user in users%}
-    <p>{{user.username}}</p>
+    <p>{{user.username}} <span><a class="call" data-user="{{user.username}}" href="">Call</a></span></p>
     {% endfor %}
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'js/call.js' %}"></script>
+<script>
+
+
+var callSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/call/'
+    );
+
+function beReady(){
+    console.log('I am ready')
+}
+
+function sendCall(data) {
+    //to send a call
+    console.log("Send Call");
+    callSocket.send(JSON.stringify({
+        type: 'call',
+        data
+    }));
+
+
+    console.log(data)
+    console.log('I am calling someone')
+
+}
+
+
+function processCall(userName) {
+    sendCall({name: userName,rtcMessage: "sessionDescription"})
+   
+}
+
+
+const onNewCall = (data) =>{
+        //when other called you
+        //show answer button
+
+        otherUser = data.caller;
+        remoteRTCMessage = data.rtcMessage
+
+        console.log('I am receiving call')
+    
+    }
+
+
+$(document).ready(function(){
+    callSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/call/'
+    );
+
+    callSocket.onopen = event =>{
+    //let's send myName to the socket
+    callSocket.send(JSON.stringify({
+            type: 'login',
+            data: {
+                name: $('#myname').attr('data-item')
+            }
+        }));
+    }
+
+
+    $('.call').click(function(e){
+        e.preventDefault();
+
+        let userToCall = $(this).attr('data-user')
+        otherUser = userToCall;
+        beReady()
+        processCall(userToCall)
+
+
+    })
+
+
+    callSocket.onmessage = (e) =>{
+
+        let response = JSON.parse(e.data);
+        let type = response.type;
+        
+        if(type == 'call_received') {
+            // console.log(response);
+            onNewCall(response.data)
+        }
+    }
+
+
+})
+</script>
 </html>
