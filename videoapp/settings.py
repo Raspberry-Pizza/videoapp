@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'crispy_forms',
+    'channels',
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -71,7 +72,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'videoapp.wsgi.application'
+#WSGI_APPLICATION = 'videoapp.wsgi.application'
+ASGI_APPLICATION = 'videoapp.asgi.application'
+
+CHANNEL_LAYERS={
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 
 # Database
@@ -120,6 +128,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+if DEBUG:
+    STATICFILES_DIRS=[BASE_DIR / 'static']
+else:
+    STATIC_ROOT=BASE_DIR / 'static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT=BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
