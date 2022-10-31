@@ -19,6 +19,7 @@ from account.views import *
 from account import *
 
 urlpatterns = [
+    path('', views.home, name='home'),
     path('dashboard', Dashboard.as_view(), name='dashboard'),
     path('login', Login.as_view(), name='login'),
     path('registration', Registration.as_view(), name='registration'),
