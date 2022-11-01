@@ -51,3 +51,7 @@ class Registration(View):
         else:
             print('invalid form!')
         return render(request, self.template_name, {'forms': forms})
+
+
+def home(request):
+    return redirect('dashboard')

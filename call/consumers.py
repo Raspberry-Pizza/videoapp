@@ -54,9 +54,49 @@ class CallConsumer(WebsocketConsumer):
             )
 
 
+        if eventType == 'answer_call':
+            caller = text_data_json['data']['caller']
+            async_to_sync(self.channel_layer.group_send)(
+                caller,
+                {
+                    'type': 'call_answered',
+                    'data': {
+                        'rtcMessage': text_data_json['data']['rtcMessage']
+                    }
+                }
+            )
+
+        if eventType == 'ICEcandidate':
+            user = text_data_json['data']['user']
+            async_to_sync(self.channel_layer.group_send)(
+                user,
+                {
+                    'type': 'ICEcandidate',
+                    'data': {
+                        'rtcMessage': text_data_json['data']['rtcMessage']
+                    }
+                }
+            )
+
+
     def call_received(self, event):
         print('Call received by')
         self.send(text_data=json.dumps({
             'type': 'call_received',
+            'data': event['data']
+        }))
+
+    def call_answered(self, event):
+
+        # print(event)
+        print(self.my_name, "'s call answered")
+        self.send(text_data=json.dumps({
+            'type': 'call_answered',
+            'data': event['data']
+        }))
+
+    def ICEcandidate(self, event):
+        self.send(text_data=json.dumps({
+            'type': 'ICEcandidate',
             'data': event['data']
         }))
