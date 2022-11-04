@@ -65,6 +65,18 @@ class CallConsumer(WebsocketConsumer):
                     }
                 }
             )
+        
+        if eventType == 'close_call':
+            name = text_data_json['data']['name']
+            async_to_sync(self.channel_layer.group_send)(
+                name,
+                {
+                    'type': 'end_call_received',
+                    'data': {
+                        'caller': self.my_name
+                    }
+                }
+            )
 
         if eventType == 'ICEcandidate':
             user = text_data_json['data']['user']
@@ -83,6 +95,12 @@ class CallConsumer(WebsocketConsumer):
         print('Call received by')
         self.send(text_data=json.dumps({
             'type': 'call_received',
+            'data': event['data']
+        }))
+
+    def end_call_received(self, event):
+        self.send(text_data=json.dumps({
+            'type': 'end_call_received',
             'data': event['data']
         }))
 

@@ -14,7 +14,8 @@ class Dashboard(LoginRequiredMixin, View):
 
     def get(self, request):
         users=User.objects.all()
-        return render(request, self.template_name, {'users': users})
+        current_user = request.user
+        return render(request, self.template_name, {'users': users, 'current_user': current_user})
 
 
 
