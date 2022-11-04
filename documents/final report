@@ -1,0 +1,42 @@
+# System Goals (1 point)
+
+We had one main goal for our system – to develop an application that can be used for one to one live video chat using WebRTC.
+
+# System architecture (2 points)
+
+<add discription of the system architecture or we can adda a drawing of it and add a link here to the drawing>
+
+# Components / Module description including the interfaces exposed between the modules (2 points)
+
+Components / Module description here
+
+Interfaces exposed between the modules here
+
+# Communication channel between the modules. (2 points)
+
+For instance, do the modules use secure communication to communicate with each other, if yes, how? 
+
+# Pros and cons of the open-source components/modules used for developing the system, and the modules/components you have built (3 points)
+
+Pros
+
+Cons
+
+# Which of the fallacies of the distributed system does your system violate, and how (0.5 points)
+
+The system violated the following fallacies of the distributed system... 
+in the following ways: 
+
+# What needs to be added to your system be used to be integrated/extended by another system (2 points)
+
+To be integrated/extended by another system the following additions to your system should be done:
+
+# Evaluation. Methodology used for evaluating the system performance, and the key results (2 points)
+
+We evaluated the system performance with the methodolody of...
+
+The key results were...
+
+# Avenues for future work (0.5 points)
+
+To dive deeper into this subject one could
