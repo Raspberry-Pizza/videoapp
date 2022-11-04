@@ -18,7 +18,7 @@
     <p>Friends:</p>
     {% for user in users%}
         {% if user != current_user %}
-            <p> {{user.username}} <span><a onclick="callFriend('{{user.username}}'); return false" data-user="{{user.username}}" href="">Call</a></span></p>
+            <p> {{user.username}} <span><a onclick="callFriend('{{user.username}}')" data-user="{{user.username}}" href="javascript:">Call</a></span></p>
         {% endif %}
     {% endfor %}
 
