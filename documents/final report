@@ -40,3 +40,17 @@ The key results were...
 # Avenues for future work (0.5 points)
 
 To dive deeper into this subject one could
+
+
+# What fraction of your code is documented (and which style did you use)? (1 point)
+# How detailed is your README file or the instructions to configure and run your project? Can another team demonstrate your project using the instructions? (1 point)
+
+Core parts of the connection establishments code is commented. We decided to document the code by comments since the code part itself is not that huge and it is easier to follow with minimal documentation within the code. We have named functions in such way that it is easy to understand what they are used for. Further documentation are given in the readme file, such as general information about the project and how to set it up. The readme file has step by step instruction on how to get the project, how to set it up on your local machine and how to use it.
+
+# Which license did you use, why? Is the license compatible with the open-source tools you have used? (0.5 points)
+
+We are using MIT licence and it is compatible with the main library that we are using, Django Daphne. Daphne uses BSD 3-Clause licnece, which means that the library can be freely used in commercial and privaty use such that the copyright is preserved.
+
+# What fraction of the modules are working?  Have you documented the challenges with the code? (2.5 points)
+
+All the modules are working and we were able to make succesfull video calls with audio. From the start we knew that our goal was to make an very basic videocall application and we did not add any mute or other similar additional functions to the application. In the end we had tackled all the challenges we had faced, so there was nothing to document on that part.
