@@ -31,33 +31,24 @@ function logOut() {
 }
 
 function handleRemoteStreamAdded(event) {
-    console.log('Remote stream added.');
     remoteStream = event.streams[0];
     remoteVideo.srcObject = remoteStream;
 }
 
 function handleRemoteStreamRemoved(event) {
-    console.log('Remote stream removed. Event: ', event);
     remoteVideo.srcObject = null;
     localVideo.srcObject = null;
 }
 
 function sendICEcandidate(data) {
-    //send only if we have caller, else no need to
-    console.log("Send ICE candidate");
     callSocket.send(JSON.stringify({
         type: 'ICEcandidate',
         data
     }));
-
 }
 
 function handleIceCandidate(event) {
-    // console.log('icecandidate event: ', event);
     if (event.candidate) {
-        console.log("Local ICE candidate");
-        // console.log(event.candidate.candidate);
-
         sendICEcandidate({
             user: otherUser,
             rtcMessage: {
@@ -78,7 +69,6 @@ function createPeerConnection() {
         peerConnection.onicecandidate = handleIceCandidate;
         peerConnection.ontrack = handleRemoteStreamAdded;
         peerConnection.onremovestream = handleRemoteStreamRemoved;
-        console.log('Created RTCPeerConnnection');
         return;
     } catch (e) {
         console.log('Failed to create PeerConnection, exception: ' + e.message);
@@ -89,11 +79,12 @@ function createPeerConnection() {
 
 function createConnectionAndAddStream() {
     createPeerConnection();
-    peerConnection.addStream(localStream);
+    peerConnection.addStream(localStream); // Add local steam
     return true;
    
 }
 
+// Initate local stream and initiate RTC peer connection
 function beReady(local, remote) {
     localVideo = local;
     remoteVideo = remote;
@@ -113,7 +104,6 @@ function beReady(local, remote) {
 }
 
 function answerCall(data) {
-    //to answer a call
     callSocket.send(JSON.stringify({
         type: 'answer_call',
         data
@@ -121,8 +111,8 @@ function answerCall(data) {
     callProgress(true);
 }
 
+// accept call by sending SDP answer and ICE candidates
 function processAccept() {
-
     peerConnection.setRemoteDescription(new RTCSessionDescription(remoteRTCMessage));
     peerConnection.createAnswer((sessionDescription) => {
         peerConnection.setLocalDescription(sessionDescription);
@@ -131,19 +121,16 @@ function processAccept() {
             for (let i = 0; i < iceCandidatesFromCaller.length; i++) {
                 //
                 let candidate = iceCandidatesFromCaller[i];
-                console.log("ICE candidate Added From queue");
                 try {
                     peerConnection.addIceCandidate(candidate).then(done => {
-                        console.log(done);
                     }).catch(error => {
-                        console.log(error);
+                        console.log('Problems adding ICE canndidates: ', error);
                     })
                 } catch (error) {
-                    console.log(error);
+                    console.log('Error adding ICE canndidates: ', error);
                 }
             }
             iceCandidatesFromCaller = [];
-            console.log("ICE candidate queue cleared");
         } else {
             console.log("NO Ice candidate in queue");
         }
@@ -154,7 +141,7 @@ function processAccept() {
         });
 
     }, (error) => {
-        console.log("Error");
+        console.log("Error creating SDP answer: ", error);
     });
 }
 
@@ -166,6 +153,7 @@ function acceptCall() {
     document.getElementById('reject-end').innerHTML = 'End call'
 }
 
+// closes call dialog
 function closeCall(data) {
     callSocket.send(JSON.stringify({
         type: 'close_call',
@@ -199,8 +187,6 @@ function rejectCall() {
 }
 
 function sendCall(data) {
-    //to send a call
-    console.log("Send Call");
     callSocket.send(JSON.stringify({
         type: 'call',
         data
@@ -211,6 +197,7 @@ function sendCall(data) {
     document.getElementById("callingmodal").classList.add("show");
 }
 
+// send SDP offer
 function processCall(userName) {
     peerConnection.createOffer((sessionDescription) => {
         peerConnection.setLocalDescription(sessionDescription);
@@ -219,18 +206,14 @@ function processCall(userName) {
             rtcMessage: sessionDescription
         });
     }, (error) => {
-        console.log("Error");
+        console.log("Error creating SDP offer: ", error);
     });
 }
 
+// receiving call
 const onNewCall = (data) =>{
-        //when other called you
-        //show answer button
-
         otherUser = data.caller;
         remoteRTCMessage = data.rtcMessage;
-
-        console.log('I am receiving call from %s', data.caller);
         
         document.getElementById("receivingmodal").style.display = "block";
         document.getElementById('receivingdetails').outerHTML = data.caller + " is Calling You";
@@ -241,23 +224,17 @@ function callProgress(status) {
     callInProgress = status;
 }
 
+// SDP answer received
 const onCallAnswered = (data) =>{
-        //when other accept our call
         remoteRTCMessage = data.rtcMessage;
         peerConnection.setRemoteDescription(new RTCSessionDescription(remoteRTCMessage));
 
-        console.log("Call Started. They Answered");
         document.getElementById("callingmodal").classList.add("hide");
-        // console.log(pc);
-
         callProgress(true);
 }
 
-
+// Set ICE candidates
 const onICECandidate = (data) =>{
-        // console.log(data);
-        console.log("GOT ICE candidate");
-
         let message = data.rtcMessage;
 
         let candidate = new RTCIceCandidate({
@@ -266,10 +243,8 @@ const onICECandidate = (data) =>{
         });
 
         if (peerConnection) {
-            console.log("ICE candidate Added");
             peerConnection.addIceCandidate(candidate);
         } else {
-            console.log("ICE candidate Pushed");
             iceCandidatesFromCaller.push(candidate);
         }
 }
@@ -281,8 +256,6 @@ window.onbeforeunload = function () {
 };
 
 function callFriend(userToCall) {
-    console.log('callbutton clicked', userToCall);
-
     otherUser = userToCall;
     beReady(localVideoCall, remoteVideoCall)
     .then(bool => {
@@ -291,11 +264,9 @@ function callFriend(userToCall) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('WTF');
     myName = document.getElementById('current-user').textContent;
-    console.log('MY NAME: ', myName);
+
     callSocket.onopen = event => {
-    //let's send myName to the socket
         callSocket.send(JSON.stringify({
             type: 'login',
             data: {
@@ -309,7 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let type = response.type;
 
         if(type == 'call_received') {
-            // console.log(response);
             onNewCall(response.data);
         }
 
