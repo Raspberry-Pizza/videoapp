@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -56,3 +56,10 @@ class Registration(View):
 
 def home(request):
     return redirect('dashboard')
+
+
+
+@login_required
+def Logout(request):
+    logout(request)
+    return redirect("login")

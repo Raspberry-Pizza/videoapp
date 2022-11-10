@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="header" style="width: 100%; height: 35px; background-color: beige;">
-        <p>Logged in as: <b><span id="current-user">{{current_user}}</span></b></p>
+        <p>Logged in as: <b><span id="current-user">{{current_user}}</span>  (<a href="{% url 'logout' %}">Logout</a>)</b></p>
     </div>
     <p>Friends:</p>
     {% for user in users%}
