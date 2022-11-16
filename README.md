@@ -35,7 +35,7 @@ This application uses djangos local database and we have not set up a public ser
 
 # Documentation
 
-[Final report](https://github.com/Raspberry-Pizza/videoapp/blob/main/documents/final%20report)
+[Final report](https://github.com/Raspberry-Pizza/videoapp/blob/main/documents/Raspberry%20Pizza%20-%20Final%20Report%20-%20Networked%20Systems%20and%20Services.pdf)
 
 # Authors
 
