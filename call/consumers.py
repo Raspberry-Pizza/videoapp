@@ -37,11 +37,11 @@ class CallConsumer(WebsocketConsumer):
                 self.my_name,
                 self.channel_name
             )
-            
+        
+        # receiving call
         if eventType == 'call':
             
             name = text_data_json['data']['name']
-            print('calling is success')
             async_to_sync(self.channel_layer.group_send)(
                 name,
                 {
@@ -53,7 +53,7 @@ class CallConsumer(WebsocketConsumer):
                 }
             )
 
-
+        # receiving call answer
         if eventType == 'answer_call':
             caller = text_data_json['data']['caller']
             async_to_sync(self.channel_layer.group_send)(
@@ -66,6 +66,7 @@ class CallConsumer(WebsocketConsumer):
                 }
             )
         
+        # receiving close call (Before call has been accepted)
         if eventType == 'close_call':
             name = text_data_json['data']['name']
             async_to_sync(self.channel_layer.group_send)(
@@ -78,6 +79,7 @@ class CallConsumer(WebsocketConsumer):
                 }
             )
 
+        # receiving ICE candidates 
         if eventType == 'ICEcandidate':
             user = text_data_json['data']['user']
             async_to_sync(self.channel_layer.group_send)(
@@ -92,7 +94,6 @@ class CallConsumer(WebsocketConsumer):
 
 
     def call_received(self, event):
-        print('Call received by')
         self.send(text_data=json.dumps({
             'type': 'call_received',
             'data': event['data']
@@ -105,9 +106,6 @@ class CallConsumer(WebsocketConsumer):
         }))
 
     def call_answered(self, event):
-
-        # print(event)
-        print(self.my_name, "'s call answered")
         self.send(text_data=json.dumps({
             'type': 'call_answered',
             'data': event['data']
